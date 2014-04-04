@@ -14,7 +14,8 @@ class ShoesController < ApplicationController
 
   # GET /shoes/new
   def new
-    @shoe = Shoe.new
+    @shoe = (params[:key]) ? Shoe.new(picture_params) : Shoe.new
+    @shoe.picture.success_action_redirect = new_shoe_url
   end
 
   # GET /shoes/1/edit
@@ -62,13 +63,20 @@ class ShoesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_shoe
-      @shoe = Shoe.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_shoe
+    @shoe = Shoe.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def shoe_params
-      params.require(:shoe).permit(:name, :picture, :designer, :description, :color)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def shoe_params
+    params.require(:shoe).permit(:name, :picture, :designer, :description, :color)
+  end
+
+  def shoe_params
+    params.require(:shoe).permit(:name, :designer, :description, :color, :picture, :key) # add :key
+  end
+  def picture_params # add this private method
+    params.permit(:key)
+  end
 end
